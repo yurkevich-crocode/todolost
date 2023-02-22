@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  padding: 0 10px;
+}
+
+@media (min-width: 575.98px) {
+  .container {
+    max-width: 540px;
+    margin: auto;
+    padding: 0;
+  }
+}
+
+@media (min-width: 767.98px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 991.98px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1199.98px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+.todo__filters-wrapper {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+@media (max-width: 767.98px) {
+  .todo__filters-wrapper {
+    flex-direction: column;
+  }
+}
+
+.todo__filters {
+  display: flex;
+  gap: 10px;
+}
+
+.todo__filter {
+  padding: 10px;
+  border: 1px solid rgb(188, 188, 188);
+  box-shadow: 0 0 3px 1px rgba(135, 135, 135, 0.203);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.534);
+  transition: 0.2s linear;
+  cursor: pointer;
+}
+
+.todo__filter:hover {
+  box-shadow: 0 0 3px 1px rgba(135, 135, 135, 0.706);
+}
+
+.todo__filter-add {
+  color: #635994;
+  font-weight: 600;
+  min-width: 70px;
+}
+
+.todo__filter-add::after {
+  content: "➕";
+}
+
+.todo__filter-completed {
+  background-color: rgba(106, 244, 1, 0.742);
+}
+
+.todo__filter-expect {
+  background-color: #f92f617c;
+}
+
+.search__btn {
+  position: absolute;
+  right: 10px;
+  border: 1px solid rgb(122, 173, 224);
+  background-color: rgb(122, 173, 224);
+  padding: 5px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search__btn::before {
+  content: "🔎";
+}
+@media (max-width: 767.98px) {
+  .search__btn {
+    font-size: 12px;
+  }
+}
+.search__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search__input {
+  display: flex;
+  padding: 10px 110px 10px 20px;
+  border-radius: 5px;
+  border: 1px solid rgb(188, 188, 188);
+  box-shadow: 0 0 3px 1px rgba(135, 135, 135, 0.203);
+  transition: 0.2s linear;
+  width: 100%;
+}
+
+.search__input:focus {
+  outline: 0;
+  box-shadow: 0 0 3px 1px rgba(135, 135, 135, 0.706);
+}
+
+.todo__list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.todo__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(188, 188, 188, 0.27);
+  box-shadow: 0 0 1px 0 rgb(183, 182, 182);
+  padding: 20px 40px;
+  font-size: 20px;
+  border-radius: 10px;
+  gap: 10px;
+}
+
+@media (max-width: 767.98px) {
+  .todo__item {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+.todo__item:hover {
+  box-shadow: 0 0 4px 0 rgb(183, 182, 182);
+}
+
+.todo__controls {
+  display: flex;
+  height: 30px;
+  gap: 5px;
+}
+
+.todo__control {
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.2s linear;
+}
+
+.todo__control:hover {
+  box-shadow: 0 0 4px 0 rgb(183, 182, 182);
+}
+
+.todo__control-accept {
+  border: 1px solid #635994;
+}
+
+.todo__control-delete {
+  border: 1px solid #f92f60;
+}
+
+.todo__control-accept::before {
+  content: "✔️";
+}
+
+.todo__control-delete::before {
+  content: "❌";
+}
+
+.todo__add-wrapper {
+  display: none;
+}
+
+.todo__add-wrapper.active {
+  display: block;
+}
+
+.todo__list-wrapper.hide {
+  display: none;
+}

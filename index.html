@@ -4,8 +4,43 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo List</title>
+    <title>🔍 Todo List 🔎</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body></body>
+  <body>
+    <section class="todo">
+      <div class="container">
+        <h1>Todo List</h1>
+        <div class="todo__wrapper">
+          <div class="todo__filters-wrapper">
+            <div class="todo__filters">
+              <button class="todo__filter todo__filter-all">All</button>
+              <button class="todo__filter todo__filter-completed">
+                Completed
+              </button>
+              <button class="todo__filter todo__filter-expect">Expect</button>
+            </div>
+            <div class="search__wrapper">
+              <input
+                type="search"
+                id="searchBar"
+                class="search__input"
+                placeholder="Type..."
+              />
+              <label for="searchBar" class="search__btn"></label>
+            </div>
+            <button class="todo__filter todo__filter-add">Add</button>
+          </div>
+          <div class="todo__add-wrapper">
+            <h1>Add Todo</h1>
+            <label for="text">Text</label>
+            <input type="text" id="text" />
+            <button id="addTodo">add</button>
+          </div>
+          <div class="todo__list-wrapper"></div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script src="script.js" type="module"></script>
 </html>
