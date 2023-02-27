@@ -324,3 +324,9 @@ body {
 .todo__add-btn {
   background-color: rgba(117, 212, 246, 0.356);
 }
+
+.todo__filter-all.filter,
+.todo__filter-completed.filter,
+.todo__filter-expect.filter {
+  filter: brightness(0.7);
+}

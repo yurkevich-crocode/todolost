@@ -1,20 +1,25 @@
 window.onload = () => {
+  let status = "";
+
   const __STORAGE_NAME = "ToDoStorage";
-  const storageArr = localStorage.getItem(__STORAGE_NAME);
-  const newArr = JSON.parse(storageArr);
   const list = document.querySelector(".todo__list-wrapper");
   const addBtn = document.querySelector(".todo__filter-add");
   const addWrapper = document.querySelector(".todo__add-wrapper");
   const addTodo = document.getElementById("addTodo");
   const text = document.getElementById("text");
-  const colorPicker = document.getElementById("color");
   const crossBtn = document.querySelector(".todo__add-close");
-  const todoWrapper = document.querySelector(".todo__wrapper");
   const allBtn = document.querySelector(".todo__filter-all");
+
   const completedBtn = document.querySelector(".todo__filter-completed");
   const expectBtn = document.querySelector(".todo__filter-expect");
+  const todoWarning = document.querySelector(".todo__warning");
+  const sample = ``;
 
-  function render() {
+  allBtn.classList.add("filter");
+
+  function render(status) {
+    const storageArr = localStorage.getItem(__STORAGE_NAME);
+
     list.innerHTML = " ";
     if (
       localStorage.length == 0 ||
@@ -23,12 +28,25 @@ window.onload = () => {
       localStorage.setItem(__STORAGE_NAME, JSON.stringify([]));
     }
 
-    let storageArr = localStorage.getItem(__STORAGE_NAME);
-    let newArr = JSON.parse(storageArr);
     if (localStorage.length != 0) {
+      let newArr = JSON.parse(storageArr);
+      list.innerHTML = "";
       newArr.forEach((element) => {
-        if (!list.classList.contains("hide")) {
+        if (status == "") {
           list.innerHTML += `
+          <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
+              <span class="todo__item-text">${element.text}</span>
+              <div class="todo__controls">
+                  <button class="todo__control todo__control-accept"></button>
+                  <button class="todo__control todo__control-delete"></button>
+              </div>
+          </div>
+          `;
+        }
+
+        if (status == "completed") {
+          if (element.status == "completed") {
+            list.innerHTML += `
             <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
                 <span class="todo__item-text">${element.text}</span>
                 <div class="todo__controls">
@@ -37,96 +55,53 @@ window.onload = () => {
                 </div>
             </div>
             `;
+          } else {
+            list.innerHTML += `
+            <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color};display:none" data-status="${element.status}"> 
+                <span class="todo__item-text">${element.text}</span>
+                <div class="todo__controls">
+                    <button class="todo__control todo__control-accept"></button>
+                    <button class="todo__control todo__control-delete"></button>
+                </div>
+            </div>
+            `;
+          }
         }
+
+        if (status == "expect") {
+          if (element.status == "expect") {
+            list.innerHTML += `
+            <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
+                <span class="todo__item-text">${element.text}</span>
+                <div class="todo__controls">
+                    <button class="todo__control todo__control-accept"></button>
+                    <button class="todo__control todo__control-delete"></button>
+                </div>
+            </div>
+            `;
+          } else {
+            list.innerHTML += `
+            <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color};display:none" data-status="${element.status}"> 
+                <span class="todo__item-text">${element.text}</span>
+                <div class="todo__controls">
+                    <button class="todo__control todo__control-accept"></button>
+                    <button class="todo__control todo__control-delete"></button>
+                </div>
+            </div>
+            `;
+          }
+        }
+
+        deleteItem(newArr);
+        completedItem(newArr);
       });
     }
 
-    allBtn.addEventListener("click", () => {
-      list.innerHTML = "";
-      newArr.forEach((element) => {
-        if (!list.classList.contains("hide")) {
-          list.innerHTML += `
-            <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
-                <span class="todo__item-text">${element.text}</span>
-                <div class="todo__controls">
-                    <button class="todo__control todo__control-accept"></button>
-                    <button class="todo__control todo__control-delete"></button>
-                </div>
-            </div>
-            `;
-        }
-      });
-    });
-
-    completedBtn.addEventListener("click", () => {
-      list.innerHTML = "";
-      newArr.forEach((element) => {
-        if (!list.classList.contains("hide")) {
-          if (element.status == "completed") {
-            list.innerHTML += `
-              <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
-                  <span class="todo__item-text">${element.text}</span>
-                  <div class="todo__controls">
-                      <button class="todo__control todo__control-accept"></button>
-                      <button class="todo__control todo__control-delete"></button>
-                  </div>
-              </div>
-              `;
-          }
-        }
-      });
-    });
-
-    expectBtn.addEventListener("click", () => {
-      list.innerHTML = "";
-      newArr.forEach((element) => {
-        if (!list.classList.contains("hide")) {
-          if (element.status == "expect") {
-            list.innerHTML += `
-              <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
-                  <span class="todo__item-text">${element.text}</span>
-                  <div class="todo__controls">
-                      <button class="todo__control todo__control-accept"></button>
-                      <button class="todo__control todo__control-delete"></button>
-                  </div>
-              </div>
-              `;
-          }
-        }
-      });
-    });
-
-    if (localStorage.length != 0) {
-      const todoItemAll = document.querySelectorAll(".todo__item");
-      todoItemAll.forEach((e) => {
-        const deleteCurDataAll = e.querySelectorAll(".todo__control-delete");
-        deleteCurDataAll.forEach((element) => {
-          element.addEventListener("click", () => {
-            console.log(element);
-            const pos = newArr.map((e) => e.id);
-            const indexId = pos.indexOf(
-              +element.parentNode.parentNode.dataset.id
-            );
-            if (indexId == 0) {
-              e.classList.add("delete");
-              setTimeout(() => {
-                e.classList.remove("delete");
-                newArr.splice(0, 1);
-                localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
-                render();
-              }, 200);
-            } else {
-              e.classList.add("delete");
-              setTimeout(() => {
-                newArr.splice(indexId, 1);
-                localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
-                e.classList.remove("delete");
-                render();
-              }, 200);
-            }
-          });
-        });
-      });
+    if (!JSON.parse(localStorage.getItem(__STORAGE_NAME)).length) {
+      todoWarning.style.display = "block";
+      todoWarning.textContent = "todo list is empty";
+    } else {
+      todoWarning.style.display = "none";
     }
   }
 
@@ -134,10 +109,10 @@ window.onload = () => {
     addWrapper.classList.toggle("active");
     if (addBtn.textContent == "Add") {
       addBtn.textContent = "Back";
-      render();
+      render(status);
     } else {
       addBtn.textContent = "Add";
-      render();
+      render(status);
     }
   }
 
@@ -163,7 +138,7 @@ window.onload = () => {
 
     if (text.value) {
       localStorage.setItem(__STORAGE_NAME, JSON.stringify([...storage, obj]));
-      render();
+      render(status);
       notification.classList.add("active");
       notification.style.backgroundColor = "rgb(87, 183, 87)";
       textNotification.textContent = "Todo was successfully added";
@@ -178,6 +153,72 @@ window.onload = () => {
         notification.classList.remove("active");
       }, 3000);
     }
+  }
+
+  function deleteItem(newArr) {
+    const todoItemAll = document.querySelectorAll(".todo__item");
+    todoItemAll.forEach((e) => {
+      const deleteCurDataAll = e.querySelectorAll(".todo__control-delete");
+      deleteCurDataAll.forEach((element) => {
+        element.addEventListener("click", () => {
+          const pos = newArr.map((e) => e.id);
+          const indexId = pos.indexOf(
+            +element.parentNode.parentNode.dataset.id
+          );
+          if (indexId == 0) {
+            e.classList.add("delete");
+            setTimeout(() => {
+              e.classList.remove("delete");
+              newArr.splice(0, 1);
+              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+              render(status);
+            }, 200);
+          } else {
+            e.classList.add("delete");
+            setTimeout(() => {
+              newArr.splice(indexId, 1);
+              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+              e.classList.remove("delete");
+              render(status);
+            }, 200);
+          }
+        });
+      });
+    });
+  }
+
+  function completedItem(newArr) {
+    const todoItemAll = document.querySelectorAll(".todo__item");
+    todoItemAll.forEach((e) => {
+      const acceptCurDataAll = e.querySelectorAll(".todo__control-accept");
+      acceptCurDataAll.forEach((element) => {
+        element.addEventListener("click", () => {
+          const pos = newArr.map((e) => e.id);
+          const indexId = pos.indexOf(
+            +element.parentNode.parentNode.dataset.id
+          );
+          console.log(newArr[indexId].status);
+          if (indexId == 0) {
+            e.classList.add("delete");
+            setTimeout(() => {
+              newArr[indexId].status = "completed";
+              console.log(newArr[indexId].status);
+              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+              e.classList.remove("delete");
+              render(status);
+            }, 200);
+          } else {
+            e.classList.add("delete");
+            setTimeout(() => {
+              newArr[indexId].status = "completed";
+              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+              e.classList.remove("delete");
+              render(status);
+            }, 200);
+          }
+        });
+      });
+    });
   }
 
   addBtn.addEventListener("click", () => {
@@ -195,5 +236,42 @@ window.onload = () => {
   crossBtn.addEventListener("click", () => {
     openAddField();
   });
-  render();
+
+  allBtn.addEventListener("click", () => {
+    allBtn.classList.add("filter");
+    if (completedBtn.classList.contains("filter")) {
+      completedBtn.classList.remove("filter");
+    }
+    if (expectBtn.classList.contains("filter")) {
+      expectBtn.classList.remove("filter");
+    }
+    status = "";
+    render("");
+  });
+
+  completedBtn.addEventListener("click", () => {
+    completedBtn.classList.add("filter");
+    if (allBtn.classList.contains("filter")) {
+      allBtn.classList.remove("filter");
+    }
+    if (expectBtn.classList.contains("filter")) {
+      expectBtn.classList.remove("filter");
+    }
+    status = "completed";
+    render("completed");
+  });
+
+  expectBtn.addEventListener("click", () => {
+    expectBtn.classList.add("filter");
+    if (allBtn.classList.contains("filter")) {
+      allBtn.classList.remove("filter");
+    }
+    if (completedBtn.classList.contains("filter")) {
+      completedBtn.classList.remove("filter");
+    }
+    status = "expect";
+    render("expect");
+  });
+
+  render("");
 };
