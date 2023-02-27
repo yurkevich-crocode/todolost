@@ -10,49 +10,51 @@
   <body>
     <section class="todo">
       <div class="todo__notification">
-        <p class="todo__notification-text">Todo was successfully added</p>
+        <p class="todo__notification-text"></p>
       </div>
       <div class="container">
-        <h1>Todo List</h1>
         <div class="todo__wrapper">
-          <div class="todo__filters-wrapper">
-            <div class="todo__filters">
-              <button class="todo__btn todo__filter-all">All</button>
-              <button class="todo__btn todo__filter-completed">
-                Completed
-              </button>
-              <button class="todo__btn todo__filter-expect">Expect</button>
-            </div>
-            <div class="search__wrapper">
-              <input
-                type="search"
-                id="searchBar"
-                class="search__input"
-                placeholder="Type..."
-              />
-              <label for="searchBar" class="search__btn"></label>
-            </div>
-            <button class="todo__btn todo__filter-add">Add</button>
-          </div>
-          <div class="todo__add-wrapper">
-            <h1>Add Todo</h1>
-            <div class="todo__add-items">
-              <div class="todo__add-item">
-                <label for="text" class="todo__add-text">Text</label>
-                <input type="text" id="text" class="todo__add-input" />
+          <div class="todo__header">
+            <h1>Todo List</h1>
+            <div class="todo__filters-wrapper">
+              <div class="todo__filters">
+                <button class="todo__btn todo__filter-all">All</button>
+                <button class="todo__btn todo__filter-completed">
+                  Completed
+                </button>
+                <button class="todo__btn todo__filter-expect">Expect</button>
               </div>
-              <div class="todo__add-item">
-                <label for="color" class="todo__add-text">Pick Color</label>
-                <input type="color" name="color" id="color" value="#ffffff" />
+              <div class="search__wrapper">
+                <input
+                  type="search"
+                  id="searchBar"
+                  class="search__input"
+                  placeholder="Type..."
+                />
+                <label for="searchBar" class="search__btn"></label>
               </div>
+              <button class="todo__btn todo__filter-add">Add</button>
             </div>
-            <button id="addTodo" class="todo__btn todo__add-btn">
-              Add Todo
-            </button>
           </div>
+
           <div class="todo__list-wrapper"></div>
           <h1 class="todo__warning"></h1>
         </div>
+      </div>
+      <div class="todo__add-wrapper">
+        <h1>Add Todo</h1>
+        <span class="todo__add-close">❌</span>
+        <div class="todo__add-items">
+          <div class="todo__add-item">
+            <label for="text" class="todo__add-text">Text</label>
+            <input type="text" id="text" class="todo__add-input" />
+          </div>
+          <div class="todo__add-item">
+            <label for="color" class="todo__add-text">Pick Color</label>
+            <input type="color" name="color" id="color" value="#ffffff" />
+          </div>
+        </div>
+        <button id="addTodo" class="todo__btn todo__add-btn">Add Todo</button>
       </div>
     </section>
   </body>

@@ -1,13 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mynerve&display=swap");
+:root {
+  --color: attr(data-color);
+  --family: "Mynerve", cursive;
+}
 
 * {
-  font-family: "Roboto", sans-serif;
+  font-family: var(--family);
+  font-weight: 900;
 }
 
-section {
+.todo {
   margin-bottom: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
+.todo__header {
+  position: sticky;
+  background: white;
+  z-index: 2;
+  top: 0;
+  box-shadow: 0 0 6px 6px white;
+}
 body {
   margin: 0;
 }
@@ -16,17 +31,21 @@ body {
   padding: 0 10px;
 }
 
-@media (min-width: 575.98px) {
+@media (max-width: 575.98px) {
   .container {
-    max-width: 540px;
+    width: 90%;
     margin: auto;
     padding: 0;
   }
 }
-
+@media (max-width: 767.98px) {
+  .container {
+    width: 90%;
+  }
+}
 @media (min-width: 767.98px) {
   .container {
-    max-width: 720px;
+    width: 90%;
   }
 }
 
@@ -39,6 +58,7 @@ body {
 @media (min-width: 1199.98px) {
   .container {
     max-width: 1140px;
+    min-width: 1140px;
   }
 }
 
@@ -136,34 +156,62 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: 0.2s ease;
 }
 
 .todo__item {
+  overflow: hidden;
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 1px solid rgba(188, 188, 188, 0.27);
-  box-shadow: 0 0 1px 0 rgb(183, 182, 182);
+  box-shadow: 0 0 3px 0 rgba(118, 118, 118, 0.766);
   padding: 20px 40px;
   font-size: 20px;
-  border-radius: 10px;
-  mix-blend-mode: difference;
   gap: 10px;
+  transition: 0.2s ease;
+}
+
+.todo__item::before {
+  position: absolute;
+  content: "";
+  width: 20px;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+  background-color: var(--label-color);
+  box-shadow: 0 0 5px 0 var(--label-color);
+}
+
+.todo__item.delete {
+  border: 0px solid rgba(188, 188, 188, 0.27);
+  box-shadow: 0px 0px 0px 0px rgba(118, 118, 118, 0.766);
+  height: 0;
+  padding: 0 40px;
+}
+
+@media (max-width: 767.98px) {
+  .todo__item.delete {
+    padding: 0px 10px 0px 30px;
+  }
 }
 
 @media (max-width: 767.98px) {
   .todo__item {
-    padding: 10px 20px;
+    padding: 10px 10px 10px 30px;
     font-size: 14px;
   }
 }
 
-.todo__item-text {
-  filter: invert(100%);
-}
-
 .todo__item:hover {
   box-shadow: 0 0 4px 0 rgb(183, 182, 182);
+}
+
+.todo__item-text::selection {
+  background-color: var(--label-color);
+  color: var(--label-color);
 }
 
 .todo__controls {
@@ -199,26 +247,46 @@ body {
   content: "❌";
 }
 
+.todo__add-close {
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
 .todo__add-wrapper {
+  position: absolute;
+  top: -1000%;
   opacity: 0;
   height: 0;
+  width: 0;
+  transition: opacity 0.5s ease;
 }
 
 .todo__add-wrapper.active {
   opacity: 1;
-}
-
-.todo__list-wrapper.hide {
-  opacity: 0;
+  z-index: 3;
+  position: fixed;
+  top: 20%;
+  left: unset;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  box-shadow: 0 0 120px 10px rgba(0, 0, 0, 0.181);
+  border-radius: 5px;
+  height: 210px;
+  width: 210px;
+  padding: 50px;
 }
 
 .todo__notification {
   position: fixed;
   left: -100%;
-  background-color: rgb(87, 183, 87);
+  color: rgb(238, 31, 31);
   color: rgb(255, 255, 255);
   padding: 10px 20px;
   border-radius: 5px;
+  z-index: 10;
   transition: 1s ease-in-out;
 }
 
@@ -255,4 +323,10 @@ body {
 
 .todo__add-btn {
   background-color: rgba(117, 212, 246, 0.356);
+}
+
+.todo__filter-all.filter,
+.todo__filter-completed.filter,
+.todo__filter-expect.filter {
+  filter: brightness(0.7);
 }
