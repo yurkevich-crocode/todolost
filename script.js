@@ -9,11 +9,11 @@ window.onload = () => {
   const text = document.getElementById("text");
   const crossBtn = document.querySelector(".todo__add-close");
   const allBtn = document.querySelector(".todo__filter-all");
-
+  const searchBtn = document.querySelector(".search__btn");
   const completedBtn = document.querySelector(".todo__filter-completed");
   const expectBtn = document.querySelector(".todo__filter-expect");
   const todoWarning = document.querySelector(".todo__warning");
-  const sample = ``;
+  const searchInput = document.getElementById("searchBar");
 
   allBtn.classList.add("filter");
 
@@ -33,15 +33,27 @@ window.onload = () => {
       list.innerHTML = "";
       newArr.forEach((element) => {
         if (status == "") {
-          list.innerHTML += `
-          <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
-              <span class="todo__item-text">${element.text}</span>
-              <div class="todo__controls">
-                  <button class="todo__control todo__control-accept"></button>
-                  <button class="todo__control todo__control-delete"></button>
-              </div>
-          </div>
-          `;
+          if (element.status == "completed") {
+            list.innerHTML += `
+            <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}" draggable="true"> 
+                <span class="todo__item-text">${element.text}</span>
+                <div class="todo__controls">
+                    <button class="todo__control todo__control-accept" disabled></button>
+                    <button class="todo__control todo__control-delete"></button>
+                </div>
+            </div>
+            `;
+          } else {
+            list.innerHTML += `
+            <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}" draggable="true"> 
+                <span class="todo__item-text">${element.text}</span>
+                <div class="todo__controls">
+                    <button class="todo__control todo__control-accept"></button>
+                    <button class="todo__control todo__control-delete"></button>
+                </div>
+            </div>
+            `;
+          }
         }
 
         if (status == "completed") {
@@ -50,7 +62,7 @@ window.onload = () => {
             <div class="todo__item" data-id="${element.id}" style="--label-color:${element.color}" data-status="${element.status}"> 
                 <span class="todo__item-text">${element.text}</span>
                 <div class="todo__controls">
-                    <button class="todo__control todo__control-accept"></button>
+                    <button class="todo__control todo__control-accept" disabled></button>
                     <button class="todo__control todo__control-delete"></button>
                 </div>
             </div>
@@ -94,6 +106,7 @@ window.onload = () => {
 
         deleteItem(newArr);
         completedItem(newArr);
+        dragElem();
       });
     }
 
@@ -103,6 +116,42 @@ window.onload = () => {
     } else {
       todoWarning.style.display = "none";
     }
+  }
+
+  function dragElem() {
+    const todoAllItems = document.querySelectorAll(".todo__item");
+    todoAllItems.forEach((item) => {
+      item.onmousedown = function (event) {
+        let shiftX = event.clientX - item.getBoundingClientRect().left;
+        console.log(item.offsetWidth);
+
+        console.log(item.getBoundingClientRect().left);
+        item.style.transition = "none";
+        // alert(shiftX);
+
+        function moveAt(pageX) {
+          item.style.left = pageX - item.offsetWidth / shiftX + "px";
+        }
+
+        function onMouseMove(event) {
+          moveAt(event.pageX);
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        moveAt(event.pageX);
+
+        item.onmouseup = function () {
+          item.onmouseup = null;
+          item.style.left = "0";
+          item.style.transition = "0.2s ease";
+          document.removeEventListener("mousemove", onMouseMove);
+        };
+      };
+
+      item.ondragstart = function () {
+        return false;
+      };
+    });
   }
 
   function openAddField() {
@@ -198,27 +247,53 @@ window.onload = () => {
             +element.parentNode.parentNode.dataset.id
           );
           console.log(newArr[indexId].status);
-          if (indexId == 0) {
-            e.classList.add("delete");
-            setTimeout(() => {
-              newArr[indexId].status = "completed";
-              console.log(newArr[indexId].status);
-              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
-              e.classList.remove("delete");
-              render(status);
-            }, 200);
-          } else {
-            e.classList.add("delete");
-            setTimeout(() => {
-              newArr[indexId].status = "completed";
-              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
-              e.classList.remove("delete");
-              render(status);
-            }, 200);
+          if (newArr[indexId].status != "completed") {
+            if (indexId == 0) {
+              if (status == "expect") {
+                e.classList.add("delete");
+              }
+              setTimeout(() => {
+                newArr[indexId].status = "completed";
+                console.log(newArr[indexId].status);
+                localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+                e.classList.remove("delete");
+                render(status);
+              }, 200);
+            } else {
+              if (status == "expect") {
+                e.classList.add("delete");
+              }
+              setTimeout(() => {
+                newArr[indexId].status = "completed";
+                localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+                e.classList.remove("delete");
+                render(status);
+              }, 200);
+            }
           }
         });
       });
     });
+  }
+
+  function search() {
+    let val = searchInput.value.trim();
+    let todoItems = document.querySelectorAll(".todo__item");
+    if (val != " ") {
+      todoItems.forEach((e) => {
+        if (e.innerText.search(val) == -1) {
+          e.classList.add("delete");
+          setTimeout(() => {
+            e.classList.add("hide");
+          }, 100);
+        } else {
+          e.classList.remove("delete");
+          setTimeout(() => {
+            e.classList.remove("hide");
+          }, 100);
+        }
+      });
+    }
   }
 
   addBtn.addEventListener("click", () => {
@@ -271,6 +346,10 @@ window.onload = () => {
     }
     status = "expect";
     render("expect");
+  });
+
+  searchInput.addEventListener("input", () => {
+    search();
   });
 
   render("");
