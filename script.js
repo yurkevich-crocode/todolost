@@ -14,7 +14,7 @@ window.onload = () => {
   const expectBtn = document.querySelector(".todo__filter-expect");
   const todoWarning = document.querySelector(".todo__warning");
   const searchInput = document.getElementById("searchBar");
-
+  const dropable = document.querySelector(".todo__dropable");
   allBtn.classList.add("filter");
 
   function render(status) {
@@ -103,11 +103,11 @@ window.onload = () => {
             `;
           }
         }
-
-        deleteItem(newArr);
-        completedItem(newArr);
-        dragElem();
       });
+
+      deleteItem(newArr);
+      completedItem(newArr);
+      dragElem(newArr);
     }
 
     if (!JSON.parse(localStorage.getItem(__STORAGE_NAME)).length) {
@@ -118,39 +118,52 @@ window.onload = () => {
     }
   }
 
-  function dragElem() {
+  function dragElem(newArr) {
     const todoAllItems = document.querySelectorAll(".todo__item");
     todoAllItems.forEach((item) => {
-      item.onmousedown = function (event) {
-        let shiftX = event.clientX - item.getBoundingClientRect().left;
-        console.log(item.offsetWidth);
-
-        console.log(item.getBoundingClientRect().left);
-        item.style.transition = "none";
-        // alert(shiftX);
-
-        function moveAt(pageX) {
-          item.style.left = pageX - item.offsetWidth / shiftX + "px";
-        }
-
-        function onMouseMove(event) {
-          moveAt(event.pageX);
-        }
-
-        document.addEventListener("mousemove", onMouseMove);
-        moveAt(event.pageX);
-
-        item.onmouseup = function () {
-          item.onmouseup = null;
-          item.style.left = "0";
-          item.style.transition = "0.2s ease";
-          document.removeEventListener("mousemove", onMouseMove);
-        };
-      };
+      item.addEventListener("mousedown", drag(item, newArr));
 
       item.ondragstart = function () {
         return false;
       };
+    });
+  }
+
+  function drag(item) {
+    let shiftX = item.getBoundingClientRect().width / 2;
+    moveAt(MouseEvent.pageX);
+
+    function moveAt(pageX) {
+      item.style.left = 0 + "px";
+      item.style.transition = "none";
+      item.style.left = pageX - shiftX + "px";
+    }
+
+    function onMouseMove(MouseEvent) {
+      item.style.transition = "none";
+      moveAt(MouseEvent.pageX);
+      if (MouseEvent.pageX >= dropable.getBoundingClientRect().left) {
+        item.style.backgroundColor = "pink";
+      } else {
+        item.style.backgroundColor = "white";
+      }
+    }
+
+    item.addEventListener("mousedown", () => {
+      item.addEventListener("mousemove", onMouseMove);
+      item.style.cursor = "grab";
+    });
+    item.addEventListener("mouseout", () => {
+      item.removeEventListener("mousemove", onMouseMove);
+      item.style.transition = "0.2s ease";
+      item.style.left = 0;
+      item.style.cursor = "default";
+    });
+    item.addEventListener("mouseup", (MouseEvent) => {
+      item.removeEventListener("mousemove", onMouseMove);
+      item.style.transition = "0.2s ease";
+      item.style.left = 0;
+      item.style.cursor = "default";
     });
   }
 
@@ -233,6 +246,31 @@ window.onload = () => {
           }
         });
       });
+
+      e.addEventListener("mouseup", (MouseEvent) => {
+        const pos = newArr.map((e) => e.id);
+
+        const indexId = pos.indexOf(+e.dataset.id);
+        if (MouseEvent.pageX >= dropable.getBoundingClientRect().left) {
+          if (indexId == 0) {
+            e.classList.add("delete");
+            setTimeout(() => {
+              e.classList.remove("delete");
+              newArr.splice(0, 1);
+              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+              render(status);
+            }, 200);
+          } else {
+            e.classList.add("delete");
+            setTimeout(() => {
+              newArr.splice(indexId, 1);
+              localStorage.setItem(__STORAGE_NAME, JSON.stringify(newArr));
+              e.classList.remove("delete");
+              render(status);
+            }, 200);
+          }
+        }
+      });
     });
   }
 
@@ -313,6 +351,7 @@ window.onload = () => {
   });
 
   allBtn.addEventListener("click", () => {
+    console.log(event);
     allBtn.classList.add("filter");
     if (completedBtn.classList.contains("filter")) {
       completedBtn.classList.remove("filter");

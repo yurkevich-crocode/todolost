@@ -20,7 +20,7 @@
 .todo__header {
   position: sticky;
   background: white;
-  z-index: 2;
+  z-index: 123;
   top: 0;
   box-shadow: 0 0 6px 6px white;
 }
@@ -152,8 +152,10 @@ body {
   align-items: center;
   border: 1px solid rgba(188, 188, 188, 0.27);
   box-shadow: 0 0 3px 0 rgba(118, 118, 118, 0.766);
+  background-color: white;
   padding: 20px 40px;
   font-size: 20px;
+  z-index: 10;
   gap: 10px;
   transition: 0.2s ease;
 }
@@ -253,7 +255,7 @@ body {
 
 .todo__add-wrapper.active {
   opacity: 1;
-  z-index: 3;
+  z-index: 1233;
   position: fixed;
   top: 20%;
   left: unset;
@@ -319,4 +321,15 @@ body {
   filter: brightness(0.5);
 }
 
+.todo__dropable
+{
+  content: "";
+  position: absolute;
+  top:0;
+  z-index: 0;
+  right: 0;
+  width: 2%;
+  height: 100vh;
+  /* background-color: red; */
+}
 
